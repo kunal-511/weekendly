@@ -1,0 +1,292 @@
+*{
+box-sizing: border-box;
+}
+html,body{
+  overflow-x: hidden;
+}
+
+/* Hide scrollbars globally */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* WebKit */
+}
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: oklch(0.99 0.005 20); /* Light pink background #fef2f2 */
+  --foreground: oklch(0.25 0.015 250); /* Dark gray text #374151 */
+  --card: oklch(1 0 0); /* Pure white for cards */
+  --card-foreground: oklch(0.25 0.015 250); /* Dark gray for card text */
+  --popover: oklch(0.98 0.005 20); /* Light popover background */
+  --popover-foreground: oklch(0.25 0.015 250); /* Dark gray for popover text */
+  --primary: oklch(0.55 0.22 25); /* Vibrant red #dc2626 */
+  --primary-foreground: oklch(1 0 0); /* White text on primary */
+  --secondary: oklch(0.75 0.15 70); /* Yellow-orange accent #f59e0b */
+  --secondary-foreground: oklch(1 0 0); /* White text on secondary */
+  --muted: oklch(0.98 0.005 220); /* Light muted background */
+  --muted-foreground: oklch(0.15 0.01 250); /* Dark muted text */
+  --accent: oklch(0.75 0.15 70); /* Yellow-orange accent */
+  --accent-foreground: oklch(0.25 0.015 250); /* Dark text on accent */
+  --destructive: oklch(0.55 0.22 25); /* Red for destructive actions */
+  --destructive-foreground: oklch(1 0 0); /* White text on destructive */
+  --border: oklch(0.92 0.005 220); /* Light border color */
+  --input: oklch(1 0 0); /* White input background */
+  --ring: oklch(0.55 0.22 25 / 0.5); /* Red ring with opacity */
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.75 0.15 70); /* Yellow-orange for charts */
+  --chart-3: oklch(0.55 0.22 25); /* Red for charts */
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0.5rem; /* Rounded corners for cards */
+  --sidebar: oklch(1 0 0); /* White sidebar */
+  --sidebar-foreground: oklch(0.25 0.015 250); /* Dark sidebar text */
+  --sidebar-primary: oklch(0.55 0.22 25); /* Red sidebar primary */
+  --sidebar-primary-foreground: oklch(1 0 0); /* White sidebar primary text */
+  --sidebar-accent: oklch(0.75 0.15 70); /* Yellow-orange sidebar accent */
+  --sidebar-accent-foreground: oklch(0.25 0.015 250); /* Dark sidebar accent text */
+  --sidebar-border: oklch(0.92 0.005 220); /* Light sidebar border */
+  --sidebar-ring: oklch(0.55 0.22 25 / 0.5); /* Red sidebar ring */
+
+  /* Added theme-specific CSS variables for dynamic theming */
+  --theme-primary: var(--primary);
+  --theme-secondary: var(--secondary);
+  --theme-accent: var(--accent);
+  --theme-background: var(--background);
+  --theme-foreground: var(--foreground);
+  --theme-muted: var(--muted);
+  --theme-muted-foreground: var(--muted-foreground);
+}
+
+.dark {
+  --background: oklch(0.12 0.01 250); /* Dark background */
+  --foreground: oklch(0.98 0.005 20); /* Light text */
+  --card: oklch(0.15 0.01 250); /* Dark card background */
+  --card-foreground: oklch(0.98 0.005 20); /* Light card text */
+  --popover: oklch(0.15 0.01 250); /* Dark popover */
+  --popover-foreground: oklch(0.98 0.005 20); /* Light popover text */
+  --primary: oklch(0.65 0.22 25); /* Brighter red for dark mode */
+  --primary-foreground: oklch(1 0 0); /* White text */
+  --secondary: oklch(0.8 0.15 70); /* Brighter yellow-orange */
+  --secondary-foreground: oklch(0.12 0.01 250); /* Dark text on secondary */
+  --muted: oklch(0.18 0.01 250); /* Dark muted background */
+  --muted-foreground: oklch(0.7 0.005 220); /* Light muted text */
+  --accent: oklch(0.8 0.15 70); /* Bright yellow-orange accent */
+  --accent-foreground: oklch(0.12 0.01 250); /* Dark text on accent */
+  --destructive: oklch(0.65 0.22 25); /* Bright red for destructive */
+  --destructive-foreground: oklch(1 0 0); /* White text */
+  --border: oklch(0.25 0.01 250); /* Dark border */
+  --input: oklch(0.18 0.01 250); /* Dark input background */
+  --ring: oklch(0.65 0.22 25 / 0.5); /* Bright red ring */
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.8 0.15 70); /* Bright yellow-orange */
+  --chart-3: oklch(0.65 0.22 25); /* Bright red */
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.15 0.01 250); /* Dark sidebar */
+  --sidebar-foreground: oklch(0.98 0.005 20); /* Light sidebar text */
+  --sidebar-primary: oklch(0.65 0.22 25); /* Bright red sidebar primary */
+  --sidebar-primary-foreground: oklch(1 0 0); /* White sidebar primary text */
+  --sidebar-accent: oklch(0.8 0.15 70); /* Bright yellow-orange sidebar accent */
+  --sidebar-accent-foreground: oklch(0.12 0.01 250); /* Dark sidebar accent text */
+  --sidebar-border: oklch(0.25 0.01 250); /* Dark sidebar border */
+  --sidebar-ring: oklch(0.65 0.22 25 / 0.5); /* Bright red sidebar ring */
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    /* Added smooth transitions for theme changes */
+    transition: background-color 0.5s ease, color 0.5s ease;
+  }
+
+  /* Added theme transition classes for smooth morphing */
+  .theme-transition {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .theme-transition * {
+    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+  }
+
+  /* Added staggered animation utilities */
+  .stagger-animation > * {
+    animation-delay: calc(var(--stagger-delay, 0) * 100ms);
+  }
+
+  /* Added mood indicator styles */
+  .mood-badge {
+    @apply inline-flex items-center justify-center w-6 h-6 text-xs rounded-full;
+    @apply bg-white/90 backdrop-blur-sm border border-gray-200/50;
+    @apply shadow-sm hover:shadow-md transition-all duration-200;
+  }
+
+  .mood-badge:hover {
+    @apply scale-110 bg-white;
+  }
+
+  /* Added premium card variations */
+  .card-minimal {
+    @apply bg-white/80 backdrop-blur-sm border border-gray-200/50;
+    @apply shadow-md hover:shadow-lg transition-all duration-300;
+  }
+
+  .card-elevated {
+    @apply bg-gradient-to-br from-white via-gray-50/50 to-white;
+    @apply shadow-lg hover:shadow-xl transition-all duration-300;
+    @apply border border-gray-100/50;
+  }
+
+  .card-bordered {
+    @apply bg-white border-2 border-gray-200/60;
+    @apply shadow-sm hover:shadow-md hover:border-gray-300/60;
+    @apply transition-all duration-200;
+  }
+
+  /* Added theme-specific background patterns */
+  .theme-chill {
+    background: radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(5, 150, 105, 0.1) 0%, transparent 50%), #f8fafc;
+  }
+
+  .theme-adventure {
+    background: linear-gradient(
+        135deg,
+        rgba(220, 38, 38, 0.1) 0%,
+        rgba(234, 88, 12, 0.1) 50%,
+        rgba(217, 119, 6, 0.1) 100%
+      ), #fef2f2;
+  }
+
+  .theme-social {
+    background: radial-gradient(circle at 30% 70%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 70% 30%, rgba(139, 92, 246, 0.1) 0%, transparent 50%), #fdf2f8;
+  }
+
+  /* Mobile responsiveness improvements */
+  @media (max-width: 640px) {
+    .text-6xl { font-size: 3rem; }
+    .text-5xl { font-size: 2.5rem; }
+    .text-4xl { font-size: 2rem; }
+    .text-3xl { font-size: 1.875rem; }
+    .text-2xl { font-size: 1.5rem; }
+    .text-xl { font-size: 1.25rem; }
+    
+    /* Prevent horizontal scroll on mobile */
+    body {
+      overflow-x: hidden;
+    }
+    
+    /* Better touch targets on mobile */
+    button, .btn, [role="button"] {
+      min-height: 44px;
+      min-width: 44px;
+    }
+    
+    /* Improved spacing for mobile */
+    .container {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    /* Mobile drag and drop improvements */
+    .touch-manipulation {
+      touch-action: manipulation;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* Mobile drag feedback */
+    [data-dragging="true"] {
+      transform: scale(1.05);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+    }
+
+    /* Mobile drop zone feedback */
+    [data-drop-zone="active"] {
+      background-color: rgba(59, 130, 246, 0.1);
+      border-color: rgb(59, 130, 246);
+      transform: scale(1.02);
+    }
+
+    /* Mobile export modal improvements */
+    .export-modal {
+      padding: 0.75rem;
+    }
+
+    .export-preview {
+      height: 250px;
+    }
+
+    .export-controls {
+      max-height: calc(100vh - 400px);
+    }
+
+    /* Mobile dialog improvements */
+    [role="dialog"] {
+      margin: 0.5rem;
+      max-height: calc(100vh - 1rem);
+    }
+  }
+
+  /* Tablet responsiveness */
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .text-8xl { font-size: 4rem; }
+    .text-6xl { font-size: 3.5rem; }
+  }
+}
