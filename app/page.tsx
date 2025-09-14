@@ -25,11 +25,13 @@ import ErrorNotification from "@/components/ErrorNotification"
 import type { WeatherData } from "@/types/export"
 import SmartIntegrations from "@/components/SmartIntegrations"
 import SmartRecommendations from "@/components/SmartRecommendations"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 
 
 export default function HomePage() {
   const searchParams = useSearchParams()
   const [activeSection, setActiveSection] = useState<"activities" | "schedule">("activities")
+  const [isActivitiesPanelCollapsed, setIsActivitiesPanelCollapsed] = useState(false)
   useEffect(() => {
     const section = searchParams.get('section')
     if (section === 'activities' || section === 'schedule') {
@@ -411,79 +413,122 @@ export default function HomePage() {
             onSectionChange={setActiveSection}
             totalPlannedActivities={totalPlannedActivities}
           />
-          {/* Main Layout*/}
-          {(activeSection === "activities" || activeSection === "schedule") && (
-            <section id="activities" className="py-8 sm:py-12 lg:py-16">
-              <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 min-h-[80vh]">
+           {/* Main Layout*/}
+           {(activeSection === "activities" || activeSection === "schedule") && (
+             <section id="activities" className="py-8 sm:py-12 lg:py-16">
+               <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+                 <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 min-h-[80vh]">
 
-                  {/* Left Side - Activities Panel */}
-                  <div className="lg:w-2/5 xl:w-1/3 flex flex-col ">
-                    <div className="backdrop-blur-sm rounded-2xl border border-gray-200 shadow-lg flex-1 flex flex-col bg-white/80 max-h-[160vh] overflow-y-hidden">
-                      <div className="p-6 pb-4 border-b border-gray-100">
-                        <div className="text-center mb-6">
-                          <h2 className="text-2xl sm:text-3xl font-bold mb-2 leading-tight" style={{ color: currentTheme.colors.foreground }}>
-                            🎯 Choose Activities
-                          </h2>
-                          <p className="text-sm sm:text-base text-gray-600">
-                            Discover and add activities to your weekend plan
-                          </p>
-                        </div>
+                   {/* Left Side - Activities Panel */}
+                   {!isActivitiesPanelCollapsed && (
+                     <div className="lg:w-2/5 xl:w-1/3 flex flex-col">
+                       <div className="backdrop-blur-sm rounded-2xl border border-gray-200 shadow-lg flex-1 flex flex-col bg-white/80 max-h-[160vh] overflow-y-hidden">
+                         <div className="p-4 border-b border-gray-100 flex items-center justify-between">
+                           <h2 className="text-xl font-bold" style={{ color: currentTheme.colors.foreground }}>
+                             🎯 Activities
+                           </h2>
+                           <button
+                             onClick={() => setIsActivitiesPanelCollapsed(true)}
+                             className="p-2 hover:bg-gray-100 rounded-lg transition-colors group"
+                             title="Collapse Activities Panel"
+                           >
+                            <ChevronLeft className="w-5 h-5 text-gray-600 group-hover:text-red-500" />
 
+                           </button>
+                         </div>
 
+                         <div className="p-6 pb-4 border-b border-gray-100">
+                           <div className="text-center mb-6">
+                             <p className="text-sm sm:text-base text-gray-600">
+                               Discover and add activities to your weekend plan
+                             </p>
+                           </div>
 
-                        {/* Search and Filters */}
-                        <div className="space-y-3">
-                          <EnhancedSearch
-                            activities={activities}
-                            categories={categories}
-                            searchQuery={searchQuery}
-                            selectedCategory={selectedCategory}
-                            moodFilters={moodFilters}
-                            onSearchChange={setSearchQuery}
-                            onCategoryChange={setSelectedCategory}
-                            onMoodChange={setMoodFilters}
-                            onActivitySelect={handleAddToWeekend}
-                          />
-                          <MoodFilter onMoodChange={setMoodFilters} />
-                        </div>
-                      </div>
+                           {/* Search and Filters */}
+                           <div className="space-y-3">
+                             <EnhancedSearch
+                               activities={activities}
+                               categories={categories}
+                               searchQuery={searchQuery}
+                               selectedCategory={selectedCategory}
+                               moodFilters={moodFilters}
+                               onSearchChange={setSearchQuery}
+                               onCategoryChange={setSelectedCategory}
+                               onMoodChange={setMoodFilters}
+                               onActivitySelect={handleAddToWeekend}
+                             />
+                             <MoodFilter onMoodChange={setMoodFilters} />
+                           </div>
+                         </div>
 
-                      {/* Activities Grid */}
-                      <div className="flex-1 p-6 overflow-y-auto">
-                        <ActivityGrid
-                          activities={filteredActivities}
-                          addedActivities={Array.from(scheduledActivityIds)}
-                          onAddToWeekend={handleAddToWeekend}
-                        />
+                         {/* Activities Grid */}
+                         <div className="flex-1 p-6 overflow-y-auto">
+                           <ActivityGrid
+                             activities={filteredActivities}
+                             addedActivities={Array.from(scheduledActivityIds)}
+                             onAddToWeekend={handleAddToWeekend}
+                           />
 
-                        {/* Smart Recommendations */}
-                        {(Object.values(weekendSchedule.saturday).flat().length > 0 ||
-                          Object.values(weekendSchedule.sunday).flat().length > 0) && (
-                            <div className="mt-8">
-                              <SmartRecommendations schedule={weekendSchedule} onAddActivity={handleAddToWeekend} />
-                            </div>
-                          )}
-                      </div>
-                    </div>
+                           {/* Smart Recommendations */}
+                           {(Object.values(weekendSchedule.saturday).flat().length > 0 ||
+                             Object.values(weekendSchedule.sunday).flat().length > 0) && (
+                             <div className="mt-8">
+                               <SmartRecommendations schedule={weekendSchedule} onAddActivity={handleAddToWeekend} />
+                             </div>
+                           )}
+                         </div>
+                       </div>
+                     </div>
+                   )}
+
+                   {/* Right Side - Schedule Panel */}
+                   <div className={`flex flex-col transition-all duration-500 ${
+                     isActivitiesPanelCollapsed ? 'lg:w-full' : 'lg:w-3/5 xl:w-2/3'
+                   }`}>
+                     <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200 shadow-lg flex-1">
+                       <WeekendSchedule
+                         schedule={weekendSchedule}
+                         onRemoveActivity={handleRemoveFromSchedule}
+                         onScheduleChange={setWeekendSchedule}
+                         onViewActivityDetails={handleViewActivityDetails}
+                         clearAllData={clearAllData}
+                       />
+                     </div>
+                   </div>
+
+                 </div>
+               </div>
+             </section>
+           )}
+
+          {isActivitiesPanelCollapsed && (activeSection === "activities" || activeSection === "schedule") && (
+            <div className="fixed left-6 top-1/2 transform -translate-y-1/2 z-50 animate-in slide-in-from-left-4 duration-500">
+              <div className="flex flex-col items-center gap-3">
+                <button
+                  onClick={() => setIsActivitiesPanelCollapsed(false)}
+                  className="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white p-4 rounded-2xl shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-110 group relative overflow-hidden"
+                  title="Show Activities Panel"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                  
+                  <div className="relative flex items-center gap-2">
+                    <span className="text-xl">🎯</span>
+                    <ChevronRight className="w-5 h-5 text-red-500" />
+
                   </div>
+                </button>
 
-                  {/* Right Side - Schedule Panel */}
-                  <div className="lg:w-3/5 xl:w-2/3 flex flex-col">
-                    <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200 shadow-lg flex-1">
-                      <WeekendSchedule
-                        schedule={weekendSchedule}
-                        onRemoveActivity={handleRemoveFromSchedule}
-                        onScheduleChange={setWeekendSchedule}
-                        onViewActivityDetails={handleViewActivityDetails}
-                        clearAllData={clearAllData}
-                      />
-                    </div>
+                {totalPlannedActivities > 0 && (
+                  <div className="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg animate-pulse">
+                    {totalPlannedActivities} planned
                   </div>
+                )}
 
+                <div className="bg-black/80 text-white text-xs px-3 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+                  Browse Activities
                 </div>
               </div>
-            </section>
+            </div>
           )}
 
           {/* Export & Share Modal */}
