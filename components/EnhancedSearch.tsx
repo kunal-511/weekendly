@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useCallback, useMemo, useRef, useEffect } from "react"
-import { Search, X, Filter, Clock, TrendingUp} from "lucide-react"
+import { Search, X, Filter, Clock, TrendingUp } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import type { Activity, ActivityCategory } from "@/types/activity"
@@ -61,7 +61,7 @@ export default function EnhancedSearch({
 
   const saveRecentSearch = useCallback((query: string) => {
     if (query.trim().length < 2) return
-    
+
     setRecentSearches(prev => {
       const updated = [query, ...prev.filter(s => s !== query)].slice(0, 5)
       localStorage.setItem('weekendly-recent-searches', JSON.stringify(updated))
@@ -83,7 +83,7 @@ export default function EnhancedSearch({
     const query = searchQuery.toLowerCase()
 
     activities
-      .filter(activity => 
+      .filter(activity =>
         activity.title.toLowerCase().includes(query) ||
         activity.description.toLowerCase().includes(query)
       )
@@ -99,7 +99,7 @@ export default function EnhancedSearch({
       })
 
     categories
-      .filter(category => 
+      .filter(category =>
         category.name.toLowerCase().includes(query) && category.id !== 'all'
       )
       .slice(0, 2)
@@ -140,16 +140,16 @@ export default function EnhancedSearch({
   }, [onActivitySelect, onSearchChange, onCategoryChange, saveRecentSearch])
 
   const toggleDurationFilter = useCallback((durationId: string) => {
-    setSelectedDuration(prev => 
-      prev.includes(durationId) 
+    setSelectedDuration(prev =>
+      prev.includes(durationId)
         ? prev.filter(id => id !== durationId)
         : [...prev, durationId]
     )
   }, [])
 
   const togglePopularityFilter = useCallback((popularityId: string) => {
-    setSelectedPopularity(prev => 
-      prev.includes(popularityId) 
+    setSelectedPopularity(prev =>
+      prev.includes(popularityId)
         ? prev.filter(id => id !== popularityId)
         : [...prev, popularityId]
     )
@@ -165,10 +165,10 @@ export default function EnhancedSearch({
 
   const hasActiveFilters = useMemo(() => {
     return searchQuery.length > 0 ||
-           selectedCategory !== 'all' ||
-           Object.values(moodFilters).some(arr => arr.length > 0) ||
-           selectedDuration.length > 0 ||
-           selectedPopularity.length > 0
+      selectedCategory !== 'all' ||
+      Object.values(moodFilters).some(arr => arr.length > 0) ||
+      selectedDuration.length > 0 ||
+      selectedPopularity.length > 0
   }, [searchQuery, selectedCategory, moodFilters, selectedDuration, selectedPopularity])
 
   const filteredActivitiesCount = useMemo(() => {
@@ -279,12 +279,9 @@ export default function EnhancedSearch({
             <Filter className="w-4 h-4" />
             Advanced Filters
           </Button>
-          
+
           {hasActiveFilters && (
             <>
-              <div className="text-sm text-gray-600">
-                {filteredActivitiesCount} activities found
-              </div>
               <Button
                 variant="ghost"
                 size="sm"
@@ -296,6 +293,7 @@ export default function EnhancedSearch({
             </>
           )}
         </div>
+
 
         <div className="flex items-center gap-2 overflow-x-auto">
           <div className="flex gap-2 min-w-max">
@@ -313,7 +311,11 @@ export default function EnhancedSearch({
             ))}
           </div>
         </div>
+
       </div>
+      {hasActiveFilters && <div className="text-sm text-gray-600">
+        {filteredActivitiesCount} activities found
+      </div>}
 
       {showAdvancedFilters && (
         <div className="bg-white/60 backdrop-blur-sm border border-gray-200 rounded-xl p-4 space-y-4">

@@ -126,7 +126,7 @@ const DraggableActivityCard = memo(function DraggableActivityCard({
             </span>
           ))}
         </div>
-        <div className="flex items-start justify-between mt-4">
+        <div className="flex items-start justify-between mt-8">
           <div className="flex items-center gap-2">
             <div className="text-2xl transform group-hover:scale-110 transition-transform duration-200">
               {activity.icon}
