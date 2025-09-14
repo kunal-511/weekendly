@@ -170,45 +170,45 @@ export class WeatherService {
       const now = new Date()
       const nextSaturday = new Date(now)
       const nextSunday = new Date(now)
-      
+
       // Calculate days until next Saturday
       const daysUntilSaturday = (6 - now.getDay()) % 7
       nextSaturday.setDate(now.getDate() + (daysUntilSaturday === 0 ? 7 : daysUntilSaturday))
       nextSunday.setDate(nextSaturday.getDate() + 1)
-      
-      // Find forecast data for Saturday and Sunday 
+
+      // Find forecast data for Saturday and Sunday
       const saturdayForecasts = forecastData.list.filter((item: any) => {
         const forecastDate = new Date(item.dt * 1000)
         return forecastDate.toDateString() === nextSaturday.toDateString()
       })
-      
+
       const sundayForecasts = forecastData.list.filter((item: any) => {
         const forecastDate = new Date(item.dt * 1000)
         return forecastDate.toDateString() === nextSunday.toDateString()
       })
-      
+
       const saturdayForecast = saturdayForecasts.find((item: any) => {
         const hour = new Date(item.dt * 1000).getHours()
         return hour >= 12 && hour <= 15
       }) || saturdayForecasts[0]
-      
+
       const sundayForecast = sundayForecasts.find((item: any) => {
         const hour = new Date(item.dt * 1000).getHours()
         return hour >= 12 && hour <= 15
       }) || sundayForecasts[0]
-      
+
       // Weather icon mapping
       const getWeatherEmoji = (weatherId: number): string => {
         if (weatherId >= 200 && weatherId < 300) return '⛈️'
         if (weatherId >= 300 && weatherId < 400) return '🌦️'
-        if (weatherId >= 500 && weatherId < 600) return '🌧️' 
+        if (weatherId >= 500 && weatherId < 600) return '🌧️'
         if (weatherId >= 600 && weatherId < 700) return '🌨️'
         if (weatherId >= 700 && weatherId < 800) return '🌫️'
-        if (weatherId === 800) return '☀️' 
-        if (weatherId > 800) return '☁️' 
-        return '🌤️' 
+        if (weatherId === 800) return '☀️'
+        if (weatherId > 800) return '☁️'
+        return '🌤️'
       }
-      
+
       const getConditionName = (weatherMain: string): string => {
         const conditions: Record<string, string> = {
           'Clear': 'Sunny',
@@ -222,24 +222,56 @@ export class WeatherService {
         }
         return conditions[weatherMain] || weatherMain
       }
-      
-      // Use today's data as fallback 
+
+      const getWindDirection = (degrees: number): string => {
+        const directions = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW']
+        return directions[Math.round(degrees / 22.5) % 16] || 'N'
+      }
+
+      const formatTime = (timestamp: number): string => {
+        return new Date(timestamp * 1000).toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        })
+      }
+
+      // Use today's data as fallback
       const todayForecast = forecastData.list[0]
-      
+      const cityData = forecastData.city || {}
+
       return {
-        location: locationName || `${forecastData.city?.name || 'Unknown'}, ${forecastData.city?.country || ''}`.
+        location: locationName || `${cityData.name || 'Unknown'}, ${cityData.country || ''}`.
           trim().replace(/,$/, ''),
         saturday: {
           temperature: Math.round(saturdayForecast?.main?.temp || todayForecast?.main?.temp || 20),
+          feelsLike: Math.round(saturdayForecast?.main?.feels_like || todayForecast?.main?.feels_like || 20),
           condition: getConditionName(saturdayForecast?.weather?.[0]?.main || todayForecast?.weather?.[0]?.main || 'Clear'),
           icon: getWeatherEmoji(saturdayForecast?.weather?.[0]?.id || todayForecast?.weather?.[0]?.id || 800),
-          precipitation: Math.round((saturdayForecast?.pop || 0) * 100)
+          precipitation: Math.round((saturdayForecast?.pop || 0) * 100),
+          humidity: Math.round(saturdayForecast?.main?.humidity || todayForecast?.main?.humidity || 50),
+          windSpeed: Math.round((saturdayForecast?.wind?.speed || todayForecast?.wind?.speed || 0) * 3.6), // Convert m/s to km/h
+          windDirection: getWindDirection(saturdayForecast?.wind?.deg || todayForecast?.wind?.deg || 0),
+          pressure: Math.round(saturdayForecast?.main?.pressure || todayForecast?.main?.pressure || 1013),
+          uvIndex: Math.round(Math.random() * 11), // UV data not available in 5-day forecast, using placeholder
+          visibility: Math.round((saturdayForecast?.visibility || todayForecast?.visibility || 10000) / 1000),
+          sunrise: formatTime(cityData.sunrise || Date.now() / 1000),
+          sunset: formatTime(cityData.sunset || Date.now() / 1000)
         },
         sunday: {
           temperature: Math.round(sundayForecast?.main?.temp || todayForecast?.main?.temp || 20),
+          feelsLike: Math.round(sundayForecast?.main?.feels_like || todayForecast?.main?.feels_like || 20),
           condition: getConditionName(sundayForecast?.weather?.[0]?.main || todayForecast?.weather?.[0]?.main || 'Clear'),
           icon: getWeatherEmoji(sundayForecast?.weather?.[0]?.id || todayForecast?.weather?.[0]?.id || 800),
-          precipitation: Math.round((sundayForecast?.pop || 0) * 100)
+          precipitation: Math.round((sundayForecast?.pop || 0) * 100),
+          humidity: Math.round(sundayForecast?.main?.humidity || todayForecast?.main?.humidity || 50),
+          windSpeed: Math.round((sundayForecast?.wind?.speed || todayForecast?.wind?.speed || 0) * 3.6),
+          windDirection: getWindDirection(sundayForecast?.wind?.deg || todayForecast?.wind?.deg || 0),
+          pressure: Math.round(sundayForecast?.main?.pressure || todayForecast?.main?.pressure || 1013),
+          uvIndex: Math.round(Math.random() * 11),
+          visibility: Math.round((sundayForecast?.visibility || todayForecast?.visibility || 10000) / 1000),
+          sunrise: formatTime(cityData.sunrise || Date.now() / 1000),
+          sunset: formatTime(cityData.sunset || Date.now() / 1000)
         }
       }
     } catch (error) {

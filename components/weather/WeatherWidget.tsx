@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { WeatherService } from "@/utils/weather-service"
 import type { WeatherData } from "@/types/export"
-import { MapPin, RefreshCw, Droplets, Wind, Thermometer, Eye } from "lucide-react"
+import { MapPin, RefreshCw, Droplets, Wind, Thermometer, Eye, Gauge, Sun, Sunset, Navigation } from "lucide-react"
 import { Loader } from "../Loader"
 
 interface WeatherWidgetProps {
@@ -182,27 +182,62 @@ const WeatherWidget = memo(function WeatherWidget({ onWeatherUpdate }: WeatherWi
         )}
 
         {weather && (
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${getWeatherGradient(weather.saturday.condition)} p-6 text-white shadow-xl transform hover:scale-[1.02] transition-transform`}>
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${getWeatherGradient(weather.saturday.condition)} p-6 text-white shadow-xl`}>
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="font-bold text-xl">Saturday</div>
-                    <div className="text-4xl">{weather.saturday.icon}</div>
+                    <div className="font-bold text-2xl">Saturday</div>
+                    <div className="text-5xl">{weather.saturday.icon}</div>
                   </div>
-                  <div className={`text-4xl font-bold mb-2 ${getTemperatureColor(weather.saturday.temperature)} filter drop-shadow-sm`}>
+                  <div className="text-5xl font-bold mb-2 text-white filter drop-shadow-lg">
                     {weather.saturday.temperature}°C
                   </div>
-                  <div className="text-white/90 font-medium mb-3">{weather.saturday.condition}</div>
+                  <div className="text-white/90 font-medium text-lg mb-4">{weather.saturday.condition}</div>
 
-                  <div className="flex items-center justify-between text-sm text-white/80">
-                    <div className="flex items-center gap-1">
-                      <Droplets className="w-4 h-4" />
-                      <span>{weather.saturday.precipitation}%</span>
-                    </div>
-                    <div className="flex items-center gap-1">
+                  <div className="grid grid-cols-2 gap-3 mb-4">
+                    <div className="flex items-center gap-2 text-sm text-white/80">
                       <Thermometer className="w-4 h-4" />
-                      <span>Feels {weather.saturday.temperature + Math.floor(Math.random() * 6 - 3)}°C</span>
+                      <span>Feels {weather.saturday.feelsLike}°C</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-white/80">
+                      <Droplets className="w-4 h-4" />
+                      <span>{weather.saturday.precipitation}% rain</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-white/80">
+                      <Wind className="w-4 h-4" />
+                      <span>{weather.saturday.windSpeed} km/h {weather.saturday.windDirection}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-white/80">
+                      <Eye className="w-4 h-4" />
+                      <span>{weather.saturday.humidity}% humidity</span>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-white/20 pt-3 space-y-2">
+                    <div className="flex items-center justify-between text-xs text-white/70">
+                      <div className="flex items-center gap-1">
+                        <Gauge className="w-3 h-3" />
+                        <span>{weather.saturday.pressure} hPa</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Sun className="w-3 h-3" />
+                        <span>UV {weather.saturday.uvIndex}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Navigation className="w-3 h-3" />
+                        <span>{weather.saturday.visibility} km</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-white/70">
+                      <div className="flex items-center gap-1">
+                        <Sun className="w-3 h-3" />
+                        <span>↑ {weather.saturday.sunrise}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Sunset className="w-3 h-3" />
+                        <span>↓ {weather.saturday.sunset}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -210,25 +245,60 @@ const WeatherWidget = memo(function WeatherWidget({ onWeatherUpdate }: WeatherWi
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-8 -translate-x-8"></div>
               </div>
 
-              <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${getWeatherGradient(weather.sunday.condition)} p-6 text-white shadow-xl transform hover:scale-[1.02] transition-transform`}>
+              <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${getWeatherGradient(weather.sunday.condition)} p-6 text-white shadow-xl`}>
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="font-bold text-xl">Sunday</div>
-                    <div className="text-4xl">{weather.sunday.icon}</div>
+                    <div className="font-bold text-2xl">Sunday</div>
+                    <div className="text-5xl">{weather.sunday.icon}</div>
                   </div>
-                  <div className={`text-4xl font-bold mb-2 ${getTemperatureColor(weather.sunday.temperature)} filter drop-shadow-sm`}>
+                  <div className="text-5xl font-bold mb-2 text-white filter drop-shadow-lg">
                     {weather.sunday.temperature}°C
                   </div>
-                  <div className="text-white/90 font-medium mb-3">{weather.sunday.condition}</div>
+                  <div className="text-white/90 font-medium text-lg mb-4">{weather.sunday.condition}</div>
 
-                  <div className="flex items-center justify-between text-sm text-white/80">
-                    <div className="flex items-center gap-1">
-                      <Droplets className="w-4 h-4" />
-                      <span>{weather.sunday.precipitation}%</span>
-                    </div>
-                    <div className="flex items-center gap-1">
+                  <div className="grid grid-cols-2 gap-3 mb-4">
+                    <div className="flex items-center gap-2 text-sm text-white/80">
                       <Thermometer className="w-4 h-4" />
-                      <span>Feels {weather.sunday.temperature + Math.floor(Math.random() * 6 - 3)}°C</span>
+                      <span>Feels {weather.sunday.feelsLike}°C</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-white/80">
+                      <Droplets className="w-4 h-4" />
+                      <span>{weather.sunday.precipitation}% rain</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-white/80">
+                      <Wind className="w-4 h-4" />
+                      <span>{weather.sunday.windSpeed} km/h {weather.sunday.windDirection}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-white/80">
+                      <Eye className="w-4 h-4" />
+                      <span>{weather.sunday.humidity}% humidity</span>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-white/20 pt-3 space-y-2">
+                    <div className="flex items-center justify-between text-xs text-white/70">
+                      <div className="flex items-center gap-1">
+                        <Gauge className="w-3 h-3" />
+                        <span>{weather.sunday.pressure} hPa</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Sun className="w-3 h-3" />
+                        <span>UV {weather.sunday.uvIndex}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Navigation className="w-3 h-3" />
+                        <span>{weather.sunday.visibility} km</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-white/70">
+                      <div className="flex items-center gap-1">
+                        <Sun className="w-3 h-3" />
+                        <span>↑ {weather.sunday.sunrise}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Sunset className="w-3 h-3" />
+                        <span>↓ {weather.sunday.sunset}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -237,6 +307,37 @@ const WeatherWidget = memo(function WeatherWidget({ onWeatherUpdate }: WeatherWi
               </div>
             </div>
 
+            <div className="bg-white/60 backdrop-blur rounded-xl p-6 border border-gray-200">
+              <div className="text-center mb-4">
+                <div className="text-lg font-semibold text-gray-800 mb-2">Weekend Weather Summary</div>
+                <div className="text-sm text-gray-600 mb-4">Perfect conditions for outdoor activities!</div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <div className="text-center p-3 bg-white/50 rounded-lg">
+                  <div className="font-medium text-gray-700 mb-1">Temperature Range</div>
+                  <div className="text-lg font-bold text-blue-600">
+                    {Math.min(weather.saturday.temperature, weather.sunday.temperature)}° - {Math.max(weather.saturday.temperature, weather.sunday.temperature)}°C
+                  </div>
+                </div>
+                <div className="text-center p-3 bg-white/50 rounded-lg">
+                  <div className="font-medium text-gray-700 mb-1">Rain Chance</div>
+                  <div className="text-lg font-bold text-cyan-600">
+                    {Math.max(weather.saturday.precipitation, weather.sunday.precipitation)}%
+                  </div>
+                </div>
+                <div className="text-center p-3 bg-white/50 rounded-lg">
+                  <div className="font-medium text-gray-700 mb-1">Wind Speed</div>
+                  <div className="text-lg font-bold text-green-600">
+                    {Math.round((weather.saturday.windSpeed + weather.sunday.windSpeed) / 2)} km/h
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-xs text-gray-500 text-center mt-4">
+                Last updated: {new Date().toLocaleTimeString()} • Weather updates every hour
+              </div>
+            </div>
           </div>
         )}
 

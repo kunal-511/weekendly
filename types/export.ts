@@ -32,15 +32,33 @@ export interface WeatherData {
   location: string
   saturday: {
     temperature: number
+    feelsLike: number
     condition: string
     icon: string
     precipitation: number
+    humidity: number
+    windSpeed: number
+    windDirection: string
+    pressure: number
+    uvIndex: number
+    visibility: number
+    sunrise: string
+    sunset: string
   }
   sunday: {
     temperature: number
+    feelsLike: number
     condition: string
     icon: string
     precipitation: number
+    humidity: number
+    windSpeed: number
+    windDirection: string
+    pressure: number
+    uvIndex: number
+    visibility: number
+    sunrise: string
+    sunset: string
   }
 }
 
