@@ -1,34 +1,41 @@
 "use client"
 
-import { useState, useMemo } from "react"
-import  HeroSection  from "@/components/HeroSection"
-import  ActivityGrid  from "@/components/ActivityGrid"
-import  ScheduleNavigation  from "@/components/ScheduleNavigation"
-import  WeekendSchedule  from "@/components/WeekendSchedule"
-import  TimeSlotModal  from "@/components/TimeSlotModal"
-import  EnhancedSearch  from "@/components/EnhancedSearch"
-import  TimeClashModal  from "@/components/TimeClashModal"
-import  ActivityDetailsModal  from "@/components/ActivityDetailsModal"
-import  ThemeSelector  from "@/components/ ThemeSelector"
-import  MoodFilter  from "@/components/MoodFilters"
+import { useState, useMemo, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
+import HeroSection from "@/components/HeroSection"
+import ActivityGrid from "@/components/ActivityGrid"
+import ScheduleNavigation from "@/components/ScheduleNavigation"
+import WeekendSchedule from "@/components/WeekendSchedule"
+import TimeSlotModal from "@/components/TimeSlotModal"
+import EnhancedSearch from "@/components/EnhancedSearch"
+import TimeClashModal from "@/components/TimeClashModal"
+import ActivityDetailsModal from "@/components/ActivityDetailsModal"
+import ThemeSelector from "@/components/ ThemeSelector"
+import MoodFilter from "@/components/MoodFilters"
 import { DragDropProvider } from "@/contexts/drag-drop-context"
 import { useTheme } from "@/contexts/theme-context"
 import { activities, categories } from "@/data/actvity"
-import type { Activity, ScheduledActivity, LongWeekend } from "@/types/activity"
+import type { Activity, ScheduledActivity } from "@/types/activity"
 import { usePersistentState } from "@/hooks/use-persistent-state"
 import { TimeClashDetector, type TimeClash } from "@/utils/time-clash-detection"
-import  ExportModal  from "@/components/export/ExportModal"
+import ExportModal from "@/components/export/ExportModal"
 import WeatherWidget from "@/components/weather/WeatherWidget"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
-import  ErrorNotification  from "@/components/ErrorNotification"
+import ErrorNotification from "@/components/ErrorNotification"
 import type { WeatherData } from "@/types/export"
 import SmartIntegrations from "@/components/SmartIntegrations"
-import HolidayAwareness from "@/components/HolidayAwareness"
 import SmartRecommendations from "@/components/SmartRecommendations"
 
 
 export default function HomePage() {
-  const [activeSection, setActiveSection] = useState<"activities" | "schedule" | "holidays">("activities")
+  const searchParams = useSearchParams()
+  const [activeSection, setActiveSection] = useState<"activities" | "schedule">("activities")
+  useEffect(() => {
+    const section = searchParams.get('section')
+    if (section === 'activities' || section === 'schedule') {
+      setActiveSection(section)
+    }
+  }, [searchParams])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null)
   const [timeClash, setTimeClash] = useState<TimeClash | null>(null)
@@ -45,8 +52,6 @@ export default function HomePage() {
   const [activityDetailsTimeSlot, setActivityDetailsTimeSlot] = useState<"morning" | "afternoon" | "evening" | undefined>(undefined)
   const [isActivityDetailsModalOpen, setIsActivityDetailsModalOpen] = useState(false)
   const [weather, setWeather] = useState<WeatherData | null>(null)
-  const [isLongWeekendMode, setIsLongWeekendMode] = useState(false)
-  const [availableDays, setAvailableDays] = useState<("friday" | "saturday" | "sunday" | "monday")[]>(["saturday", "sunday"])
 
   const { currentTheme } = useTheme()
 
@@ -289,7 +294,7 @@ export default function HomePage() {
       }
     }
 
-     
+
     if (!newSchedule[targetDay]) {
       newSchedule[targetDay] = { morning: [], afternoon: [], evening: [] }
     }
@@ -317,23 +322,6 @@ export default function HomePage() {
     setWeather(weatherData)
   }
 
-  const handleSelectLongWeekend = (longWeekend: LongWeekend) => {
-    setIsLongWeekendMode(true)
-    setAvailableDays(longWeekend.days)
-    setActiveSection("schedule")
-
-    const newSchedule = { ...weekendSchedule }
-    longWeekend.days.forEach(day => {
-      if (!newSchedule[day]) {
-        newSchedule[day] = { morning: [], afternoon: [], evening: [] }
-      }
-    })
-    setWeekendSchedule(newSchedule)
-  }
-
-  const handlePlanHoliday = () => {
-    setActiveSection("schedule")
-  }
 
   // Activity details modal 
   const handleViewActivityDetails = (
@@ -393,111 +381,110 @@ export default function HomePage() {
           {/* Landing */}
           <HeroSection />
 
+          {/* Theme Selector */}
           <section className="py-6 sm:py-8">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6">
               <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 sm:gap-0">
                 <div className="w-full sm:w-auto">
                   <ThemeSelector />
                 </div>
-
               </div>
             </div>
           </section>
 
+
+
+          <div className="m-4">
+            {/* Weather Widget */}
+            <div className="mb-4">
+              <WeatherWidget onWeatherUpdate={handleWeatherUpdate} />
+            </div>
+
+            {/* Smart Integrations  */}
+            <div className="mb-4">
+              <SmartIntegrations />
+            </div>
+          </div>
+          {/* Navigation */}
           <ScheduleNavigation
             activeSection={activeSection}
             onSectionChange={setActiveSection}
             totalPlannedActivities={totalPlannedActivities}
           />
-
-          {/* Activities Section */}
-          {activeSection === "activities" && (
+          {/* Main Layout*/}
+          {(activeSection === "activities" || activeSection === "schedule") && (
             <section id="activities" className="py-8 sm:py-12 lg:py-16">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-8 sm:mb-12">
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 leading-tight" style={{ color: currentTheme.colors.foreground }}>
-                    Choose Your Adventure
-                  </h2>
-                  <p className="text-base sm:text-lg lg:text-xl max-w-2xl mx-auto px-4 sm:px-0" style={{ color: currentTheme.colors.mutedForeground }}>
-                    Discover amazing activities to make your weekend unforgettable. Filter by category and add your favorites
-                    to start planning!
-                  </p>
-                </div>
+              <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 min-h-[80vh]">
 
-                {/* Weather Widget */}
-                <div className="mb-8">
-                  <WeatherWidget onWeatherUpdate={handleWeatherUpdate} />
-                </div>
+                  {/* Left Side - Activities Panel */}
+                  <div className="lg:w-2/5 xl:w-1/3 flex flex-col ">
+                    <div className="backdrop-blur-sm rounded-2xl border border-gray-200 shadow-lg flex-1 flex flex-col bg-white/80 max-h-[160vh] overflow-y-hidden">
+                      <div className="p-6 pb-4 border-b border-gray-100">
+                        <div className="text-center mb-6">
+                          <h2 className="text-2xl sm:text-3xl font-bold mb-2 leading-tight" style={{ color: currentTheme.colors.foreground }}>
+                            🎯 Choose Activities
+                          </h2>
+                          <p className="text-sm sm:text-base text-gray-600">
+                            Discover and add activities to your weekend plan
+                          </p>
+                        </div>
 
-                {/* Smart Integrations */}
-                <div className="mb-8">
-                  <SmartIntegrations />
-                </div>
 
-                <div className="space-y-4 sm:space-y-6 mb-8 sm:mb-12">
-                  <EnhancedSearch
-                    activities={activities}
-                    categories={categories}
-                    searchQuery={searchQuery}
-                    selectedCategory={selectedCategory}
-                    moodFilters={moodFilters}
-                    onSearchChange={setSearchQuery}
-                    onCategoryChange={setSelectedCategory}
-                    onMoodChange={setMoodFilters}
-                    onActivitySelect={handleAddToWeekend}
-                  />
 
-                  <MoodFilter onMoodChange={setMoodFilters} />
-                </div>
+                        {/* Search and Filters */}
+                        <div className="space-y-3">
+                          <EnhancedSearch
+                            activities={activities}
+                            categories={categories}
+                            searchQuery={searchQuery}
+                            selectedCategory={selectedCategory}
+                            moodFilters={moodFilters}
+                            onSearchChange={setSearchQuery}
+                            onCategoryChange={setSelectedCategory}
+                            onMoodChange={setMoodFilters}
+                            onActivitySelect={handleAddToWeekend}
+                          />
+                          <MoodFilter onMoodChange={setMoodFilters} />
+                        </div>
+                      </div>
 
-                <ActivityGrid
-                  activities={filteredActivities}
-                  addedActivities={Array.from(scheduledActivityIds)}
-                  onAddToWeekend={handleAddToWeekend}
-                />
+                      {/* Activities Grid */}
+                      <div className="flex-1 p-6 overflow-y-auto">
+                        <ActivityGrid
+                          activities={filteredActivities}
+                          addedActivities={Array.from(scheduledActivityIds)}
+                          onAddToWeekend={handleAddToWeekend}
+                        />
 
-                {Object.values(weekendSchedule.saturday).flat().length > 0 ||
-                  Object.values(weekendSchedule.sunday).flat().length > 0 ? (
-                  <div className="mt-12 space-y-6">
-                    <SmartRecommendations schedule={weekendSchedule} onAddActivity={handleAddToWeekend} />
+                        {/* Smart Recommendations */}
+                        {(Object.values(weekendSchedule.saturday).flat().length > 0 ||
+                          Object.values(weekendSchedule.sunday).flat().length > 0) && (
+                            <div className="mt-8">
+                              <SmartRecommendations schedule={weekendSchedule} onAddActivity={handleAddToWeekend} />
+                            </div>
+                          )}
+                      </div>
+                    </div>
                   </div>
-                ) : null}
-              </div>
-            </section>
-          )}
 
+                  {/* Right Side - Schedule Panel */}
+                  <div className="lg:w-3/5 xl:w-2/3 flex flex-col">
+                    <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200 shadow-lg flex-1">
+                      <WeekendSchedule
+                        schedule={weekendSchedule}
+                        onRemoveActivity={handleRemoveFromSchedule}
+                        onScheduleChange={setWeekendSchedule}
+                        onViewActivityDetails={handleViewActivityDetails}
+                        clearAllData={clearAllData}
+                      />
+                    </div>
+                  </div>
 
-
-          {/* Holiday Section */}
-          {activeSection === "holidays" && (
-            <section id="holidays" className="py-8 sm:py-12 lg:py-16">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center mb-8 sm:mb-12">
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 leading-tight" style={{ color: currentTheme.colors.foreground }}>
-                    🏖️ Holiday Planning
-                  </h2>
-                  <p className="text-base sm:text-lg lg:text-xl max-w-2xl mx-auto px-4 sm:px-0" style={{ color: currentTheme.colors.mutedForeground }}>
-                    Discover upcoming long weekends and holidays to plan amazing getaways
-                  </p>
                 </div>
-
-                <HolidayAwareness
-                  onSelectLongWeekend={handleSelectLongWeekend}
-                  onPlanHoliday={handlePlanHoliday}
-                />
               </div>
             </section>
           )}
-
-          <WeekendSchedule
-            schedule={weekendSchedule}
-            onRemoveActivity={handleRemoveFromSchedule}
-            onScheduleChange={setWeekendSchedule}
-            onViewActivityDetails={handleViewActivityDetails}
-            clearAllData={clearAllData}
-          />
-
-
 
           {/* Export & Share Modal */}
           {(Object.values(weekendSchedule.saturday).flat().length > 0 ||

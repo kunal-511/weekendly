@@ -55,21 +55,21 @@ export function DropZoneTimeSlot({
     <div
       ref={setNodeRef}
       className={`
-        ${bgColor} p-3 sm:p-5 min-h-[180px] sm:min-h-[220px] transition-all duration-300 touch-manipulation
+        ${bgColor} p-3 min-h-[160px] transition-all duration-300 touch-manipulation
         ${timeSlotStyles[timeSlot]}
         ${isValidDropZone ? "ring-2 ring-blue-400 ring-opacity-60 sm:scale-105 shadow-xl bg-blue-50/30" : ""}
         ${isOver ? "ring-4 ring-blue-500 ring-opacity-80 bg-blue-100/40" : ""}
       `}
     >
-      <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-        <span className="text-xl sm:text-2xl transform hover:scale-110 transition-transform">{icon}</span>
+      <div className="flex items-center gap-2 mb-3">
+        <span className="text-lg transform hover:scale-110 transition-transform">{icon}</span>
         <div>
-          <h3 className="font-semibold text-gray-800 capitalize text-base sm:text-lg">{timeSlot}</h3>
-          <p className="text-xs sm:text-sm text-gray-600 font-medium">{timeRange}</p>
+          <h3 className="font-semibold text-gray-800 capitalize text-sm">{timeSlot}</h3>
+          <p className="text-xs text-gray-600 font-medium">{timeRange}</p>
         </div>
       </div>
 
-      <div className="space-y-2 sm:space-y-3">
+      <div className="space-y-2">
         {activities.length > 0 ? (
           activities.map((activity, index) => (
             <div
@@ -89,7 +89,7 @@ export function DropZoneTimeSlot({
         ) : (
           <div
             className={`
-            border-2 border-dashed rounded-lg p-4 sm:p-6 text-center transition-all duration-300 touch-manipulation
+            border-2 border-dashed rounded-lg p-3 text-center transition-all duration-300 touch-manipulation
             ${isValidDropZone ? "border-blue-400 bg-blue-50 sm:scale-105" : "border-gray-300 hover:border-gray-400"}
             ${isOver ? "border-blue-500 bg-blue-100" : ""}
           `}
@@ -108,7 +108,7 @@ export function DropZoneTimeSlot({
               ) : (
                 <>
                   <span className="text-2xl opacity-60">📋</span>
-                  <p className="text-gray-500 text-xs sm:text-sm font-medium">
+                  <p className="text-gray-500 text-xs font-medium">
                     Drop activities here
                   </p>
                 </>

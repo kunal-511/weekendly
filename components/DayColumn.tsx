@@ -26,10 +26,10 @@ export function DayColumn({ day, schedule, onRemoveActivity, onViewActivityDetai
   }[day]
 
   return (
-    <div className={`${dayBg} rounded-xl p-6`}>
-      <h2 className="text-2xl font-bold text-center mb-6 text-foreground">{dayLabel}</h2>
+    <div className={`${dayBg} rounded-lg p-4`}>
+      <h2 className="text-lg font-bold text-center mb-4 text-foreground">{dayLabel}</h2>
 
-      <div className="space-y-6">
+      <div className="space-y-4">
         <DropZoneTimeSlot
           day={day}
           timeSlot="morning"

@@ -2,8 +2,23 @@ import { Button } from "@/components/ui/button"
 
 export default function HeroSection() {
   const scrollToActivities = () => {
-    const activitiesSection = document.getElementById("activities")
-    activitiesSection?.scrollIntoView({ behavior: "smooth" })
+    setTimeout(() => {
+      // First try to find the activities section
+      const activitiesSection = document.getElementById("activities")
+      if (activitiesSection) {
+        activitiesSection.scrollIntoView({ 
+          behavior: "smooth",
+          block: "start",
+          inline: "nearest"
+        })
+      } else {
+        // Fallback scroll to a reasonable position if section not found
+        window.scrollTo({
+          top: window.innerHeight,
+          behavior: "smooth"
+        })
+      }
+    }, 100)
   }
 
   return (

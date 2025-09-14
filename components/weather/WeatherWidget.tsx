@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { WeatherService } from "@/utils/weather-service"
 import type { WeatherData } from "@/types/export"
-import { MapPin, RefreshCw, Droplets, Wind, Thermometer, Eye, Gauge, Sun, Sunset, Navigation } from "lucide-react"
+import { MapPin, RefreshCw, Droplets, Wind, Thermometer, Eye, Gauge, Sun, Sunset, Navigation, ChevronDown, ChevronUp } from "lucide-react"
 import { Loader } from "../Loader"
 
 interface WeatherWidgetProps {
@@ -13,6 +13,7 @@ interface WeatherWidgetProps {
 }
 
 const WeatherWidget = memo(function WeatherWidget({ onWeatherUpdate }: WeatherWidgetProps) {
+  const [isExpanded, setIsExpanded] = useState(false)
   const [weather, setWeather] = useState<WeatherData | null>(null)
   const [loading, setLoading] = useState(false)
   const [location, setLocation] = useState('')
@@ -76,17 +77,19 @@ const WeatherWidget = memo(function WeatherWidget({ onWeatherUpdate }: WeatherWi
   }, [fetchWeather])
 
   useEffect(() => {
-    let mounted = true
-    const loadWeather = async () => {
-      if (mounted) {
-        await fetchWeather(true)
+    if (isExpanded) {
+      let mounted = true
+      const loadWeather = async () => {
+        if (mounted) {
+          await fetchWeather(true)
+        }
+      }
+      loadWeather()
+      return () => {
+        mounted = false
       }
     }
-    loadWeather()
-    return () => {
-      mounted = false
-    }
-  }, [])
+  }, [isExpanded, fetchWeather])
 
   const getWeatherGradient = (condition: string) => {
     const gradients = {
@@ -111,26 +114,49 @@ const WeatherWidget = memo(function WeatherWidget({ onWeatherUpdate }: WeatherWi
   }
 
   return (
-    <Card className="w-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 border-0 shadow-lg">
-      <CardHeader className="pb-4">
-        <CardTitle className="flex items-center gap-3">
-          <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg">
-            <span className="text-white text-xl">🌤️</span>
-          </div>
-          <div>
-            <div className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              Weekend Weather
+    <div className="w-full bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 border-0 shadow-lg rounded-2xl overflow-hidden">
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full bg-gradient-to-r from-blue-500 to-indigo-600 p-4 text-white relative overflow-hidden hover:from-blue-600 hover:to-indigo-700 transition-all"
+      >
+        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+        <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12"></div>
+
+        <div className="relative z-10 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
+              <span className="text-white text-xl">🌤️</span>
             </div>
-            {weather?.location && (
-              <div className="text-sm text-gray-600 font-normal flex items-center gap-1">
-                <MapPin className="w-3 h-3" />
-                {weather.location}
+            <div className="text-left">
+              <h3 className="text-lg font-bold">Weekend Weather</h3>
+              <p className="text-white/80 text-sm">
+                {isExpanded 
+                  ? (weather?.location ? `Weather for ${weather.location}` : "Get weather forecast")
+                  : "Check weekend weather conditions"
+                }
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            {weather && !isExpanded && (
+              <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-1">
+                <span className="text-2xl">{weather.saturday.icon}</span>
+                <span className="text-sm font-medium">{weather.saturday.temperature}°C</span>
               </div>
             )}
+            {isExpanded ? (
+              <ChevronUp className="w-5 h-5 text-white" />
+            ) : (
+              <ChevronDown className="w-5 h-5 text-white" />
+            )}
           </div>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
+        </div>
+      </button>
+
+      {/* Expandable Content */}
+      {isExpanded && (
+        <div className="animate-in slide-in-from-top-4 duration-300">
+      <CardContent className="space-y-6 mt-4">
         <form onSubmit={handleLocationSubmit} className="flex gap-2">
           <div className="flex-1 relative">
             <input
@@ -350,7 +376,9 @@ const WeatherWidget = memo(function WeatherWidget({ onWeatherUpdate }: WeatherWi
           </div>
         )}
       </CardContent>
-    </Card>
+        </div>
+      )}
+    </div>
   )
 })
 

@@ -48,7 +48,7 @@ const ActivityGrid = memo(function ActivityGrid({ activities, addedActivities, o
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 px-2 sm:px-4">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
         {displayedActivities.map((activity, index) => {
           const isLast = index === displayedActivities.length - 1
           return (

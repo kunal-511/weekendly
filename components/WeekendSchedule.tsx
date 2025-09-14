@@ -45,36 +45,37 @@ export default function WeekendSchedule({ schedule, onRemoveActivity, onSchedule
   }
 
   return (
-    <section id="schedule" className="py-12 bg-muted/30">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="text-center mb-8">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            {isLongWeekend ? "My Long Weekend Plan" : "My Weekend Plan"}
+    <div className="h-full flex flex-col">
+      <div className="p-6 pb-4 border-b border-gray-100">
+        <div className="text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
+            {isLongWeekend ? "📅 Long Weekend Plan" : "📅 Weekend Plan"}
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base text-gray-600 max-w-md mx-auto">
             {isLongWeekend
-              ? `Your perfect ${activeDays.length}-day weekend schedule. Make the most of your extended time off!`
-              : "Your perfect weekend schedule. Organize activities by time slots and make the most of your days off."
+              ? `Your ${activeDays.length}-day schedule`
+              : "Organize activities by time slots"
             }
           </p>
           {isLongWeekend && (
-            <div className="mt-4 flex justify-center">
-              <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm font-medium">
+            <div className="mt-3 flex justify-center">
+              <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-xs font-medium">
                 🎊 {activeDays.length}-Day Weekend
               </span>
             </div>
           )}
         </div>
+      </div>
 
-        {onScheduleChange && (
-          <div className="mb-8">
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-gray-200 p-6 shadow-sm max-w-4xl mx-auto">
-              <div className="text-center mb-4">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">🎯 Extend Your Weekend</h3>
-                <p className="text-sm text-gray-600">Select additional days to create your perfect long weekend</p>
+      <div className="flex-1 p-6 overflow-y-auto">{onScheduleChange && (
+          <div className="mb-6">
+            <div className="bg-gray-50 rounded-xl border border-gray-200 p-4">
+              <div className="text-center mb-3">
+                <h3 className="text-base font-semibold text-gray-900 mb-1">🎯 Extend Your Weekend</h3>
+                <p className="text-xs text-gray-600">Select additional days for your long weekend</p>
               </div>
 
-              <div className="flex flex-wrap justify-center gap-3">
+              <div className="flex flex-wrap justify-center gap-2">
                 {(["friday", "saturday", "sunday", "monday"] as const).map((day) => {
                   const dayLabels = {
                     friday: { label: "Friday", emoji: "🎉", color: "border-purple-300 bg-purple-50" },
@@ -91,21 +92,21 @@ export default function WeekendSchedule({ schedule, onRemoveActivity, onSchedule
                       key={day}
                       onClick={() => !isCore && handleDayToggle(day)}
                       disabled={isCore}
-                      className={`px-4 py-3 rounded-lg border-2 transition-all ${isActive
+                      className={`px-3 py-2 rounded-lg border-2 transition-all text-xs ${isActive
                         ? `${dayLabels[day].color} border-opacity-100`
                         : "bg-gray-50 border-gray-200 hover:border-gray-300"
                         } ${isCore ? "opacity-100" : "cursor-pointer"} ${isCore && !isActive ? "border-dashed" : ""
                         }`}
                     >
                       <div className="flex flex-col items-center gap-1">
-                        <span className="text-lg">{dayLabels[day].emoji}</span>
-                        <span className="font-medium text-sm">{dayLabels[day].label}</span>
+                        <span className="text-sm">{dayLabels[day].emoji}</span>
+                        <span className="font-medium text-xs">{dayLabels[day].label}</span>
                         {isCore && (
                           <span className="text-xs text-gray-500">Core</span>
                         )}
                         {isActive && !isCore && (
-                          <span className="text-xs bg-white/70 px-2 py-1 rounded">
-                            {schedule[day] ? Object.values(schedule[day]!).flat().length : 0} activities
+                          <span className="text-xs bg-white/70 px-1 py-0.5 rounded">
+                            {schedule[day] ? Object.values(schedule[day]!).flat().length : 0}
                           </span>
                         )}
                       </div>
@@ -113,60 +114,47 @@ export default function WeekendSchedule({ schedule, onRemoveActivity, onSchedule
                   )
                 })}
               </div>
-
             </div>
           </div>
         )}
-        {totalActivities > 0 && <div className="flex justify-end items-end py-6  ">
-          <ClearData
-            onClearData={clearAllData}
-          />
-        </div>}
+
+        {/* Clear Data Button */}
+        {totalActivities > 0 && (
+          <div className="flex justify-end mb-4">
+            <ClearData onClearData={clearAllData} />
+          </div>
+        )}
+
         {totalActivities === 0 ? (
-          <div className="space-y-8">
-            <div className="text-center py-8">
-              <div className="text-6xl mb-4">📅</div>
-              <h3 className="text-2xl font-semibold text-foreground mb-2">Your weekend awaits!</h3>
-              <p className="text-muted-foreground mb-6">Start by adding activities from the catalog above.</p>
-              <div className="inline-flex items-center px-4 py-2 bg-blue-50 border border-blue-200 rounded-full text-sm text-blue-700 font-medium">
-                💡 You can drag activities directly to time slots below!
-              </div>
+          <div className="text-center py-8">
+            <div className="text-4xl mb-3">📅</div>
+            <h3 className="text-lg font-semibold text-foreground mb-2">Your weekend awaits!</h3>
+            <p className="text-sm text-gray-600 mb-4">Start by adding activities from the left panel.</p>
+            <div className="inline-flex items-center px-3 py-2 bg-blue-50 border border-blue-200 rounded-full text-xs text-blue-700 font-medium">
+              💡 Drag activities to time slots or use the + button
             </div>
+          </div>
+        ) : null}
 
-            <div className={`grid gap-8 ${activeDays.length === 2 ? 'md:grid-cols-2' :
-              activeDays.length === 3 ? 'md:grid-cols-3' :
-                activeDays.length === 4 ? 'md:grid-cols-2 lg:grid-cols-4' :
-                  'md:grid-cols-2'
-              }`}>
-              {activeDays.map(day => (
-                <DayColumn
-                  key={day}
-                  day={day}
-                  schedule={schedule[day]!}
-                  onRemoveActivity={onRemoveActivity}
-                  onViewActivityDetails={onViewActivityDetails}
-                />
-              ))}
-            </div>
-          </div>
-        ) : (
-          <div className={`grid gap-8 ${activeDays.length === 2 ? 'md:grid-cols-2' :
-            activeDays.length === 3 ? 'md:grid-cols-3' :
-              activeDays.length === 4 ? 'md:grid-cols-2 lg:grid-cols-4' :
-                'md:grid-cols-2'
-            }`}>
-            {activeDays.map(day => (
-              <DayColumn
-                key={day}
-                day={day}
-                schedule={schedule[day]!}
-                onRemoveActivity={onRemoveActivity}
-                onViewActivityDetails={onViewActivityDetails}
-              />
-            ))}
-          </div>
-        )}
+        {/* Day Columns Grid */}
+        <div className={`grid gap-4 ${
+          activeDays.length === 1 ? 'grid-cols-1' :
+          activeDays.length === 2 ? 'grid-cols-1 lg:grid-cols-2' :
+          activeDays.length === 3 ? 'grid-cols-1 lg:grid-cols-3' :
+          activeDays.length === 4 ? 'grid-cols-1 lg:grid-cols-2 xl:grid-cols-4' :
+          'grid-cols-1 lg:grid-cols-2'
+        }`}>
+          {activeDays.map(day => (
+            <DayColumn
+              key={day}
+              day={day}
+              schedule={schedule[day]!}
+              onRemoveActivity={onRemoveActivity}
+              onViewActivityDetails={onViewActivityDetails}
+            />
+          ))}
+        </div>
       </div>
-    </section>
+    </div>
   )
 }

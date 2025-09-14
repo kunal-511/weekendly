@@ -18,11 +18,11 @@ interface DraggableActivityCardProps {
 }
 
 const cardVariations = {
-  minimal: "bg-white shadow-md rounded-xl p-5 border-l-4 border-blue-500 hover:shadow-lg transition-all duration-200",
+  minimal: "bg-white shadow-md rounded-lg p-4 border-l-4 border-blue-500 hover:shadow-lg transition-all duration-200",
   elevated:
-    "bg-gradient-to-r from-white to-gray-50 shadow-lg rounded-2xl p-6 hover:shadow-xl transition-all duration-300 hover:scale-102",
+    "bg-gradient-to-r from-white to-gray-50 shadow-lg rounded-lg p-4 hover:shadow-xl transition-all duration-300 hover:scale-102",
   bordered:
-    "bg-white border-2 border-gray-100 rounded-lg p-4 shadow-sm hover:border-gray-200 hover:shadow-md transition-all duration-150",
+    "bg-white border-2 border-gray-100 rounded-lg p-3 shadow-sm hover:border-gray-200 hover:shadow-md transition-all duration-150",
 }
 
 const rotationClasses = ["", "rotate-1", "-rotate-1"]
@@ -105,38 +105,38 @@ const DraggableActivityCard = memo(function DraggableActivityCard({
       {...(isMobile ? {} : attributes)}
       {...(!isAdded && !isMobile ? listeners : {})}
     >
-      <CardHeader className="pb-3 relative">
+      <CardHeader className="pb-2 relative">
         {!isMobile && (
           <div 
-            className="absolute top-2 right-2 opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity cursor-grab touch-manipulation"
+            className="absolute top-1 right-1 opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity cursor-grab touch-manipulation"
           >
-            <GripVertical className="w-5 h-5 sm:w-4 sm:h-4 text-gray-400" />
+            <GripVertical className="w-4 h-4 text-gray-400" />
           </div>
         )}
-        <div className="absolute top-2 left-2 flex gap-1">
-          <span className="text-xs bg-white/80 backdrop-blur-sm rounded-full px-1.5 py-0.5 shadow-sm">
+        <div className="absolute top-1 left-1 flex gap-1">
+          <span className="text-xs bg-white/80 backdrop-blur-sm rounded-full px-1 py-0.5 shadow-sm">
             {energyEmoji}
           </span>
-          <span className="text-xs bg-white/80 backdrop-blur-sm rounded-full px-1.5 py-0.5 shadow-sm">
+          <span className="text-xs bg-white/80 backdrop-blur-sm rounded-full px-1 py-0.5 shadow-sm">
             {socialEmoji}
           </span>
-          {vibeEmojis.map((emoji, index) => (
-            <span key={index} className="text-xs bg-white/80 backdrop-blur-sm rounded-full px-1.5 py-0.5 shadow-sm">
+          {vibeEmojis.slice(0, 1).map((emoji, index) => (
+            <span key={index} className="text-xs bg-white/80 backdrop-blur-sm rounded-full px-1 py-0.5 shadow-sm">
               {emoji}
             </span>
           ))}
         </div>
-        <div className="flex items-start justify-between mt-6">
-          <div className="flex items-center gap-3">
-            <div className="text-3xl transform group-hover:scale-110 transition-transform duration-200">
+        <div className="flex items-start justify-between mt-4">
+          <div className="flex items-center gap-2">
+            <div className="text-2xl transform group-hover:scale-110 transition-transform duration-200">
               {activity.icon}
             </div>
             <div className="flex-1">
-              <h3 className="font-semibold text-lg text-card-foreground group-hover:text-primary transition-colors">
+              <h3 className="font-semibold text-sm text-card-foreground group-hover:text-primary transition-colors leading-tight">
                 {activity.title}
               </h3>
               <div
-                className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${activity.category.color} text-white shadow-sm`}
+                className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${activity.category.color} text-white shadow-sm mt-1`}
               >
                 <span className="mr-1">{activity.category.icon}</span>
                 {activity.category.name}
@@ -146,17 +146,17 @@ const DraggableActivityCard = memo(function DraggableActivityCard({
         </div>
       </CardHeader>
 
-      <CardContent className="pb-4">
-        <p className="text-gray-600 text-sm leading-relaxed mb-3">{activity.description}</p>
+      <CardContent className="pb-3">
+        <p className="text-gray-600 text-xs leading-relaxed mb-2 line-clamp-2">{activity.description}</p>
 
-        <div className="flex items-center gap-4 text-sm text-gray-500">
+        <div className="flex items-center gap-3 text-xs text-gray-500">
           <div className="flex items-center gap-1">
-            <Clock className="w-4 h-4" />
+            <Clock className="w-3 h-3" />
             <span className="font-medium">{activity.duration}h</span>
           </div>
           <div className="flex items-center gap-1">
-            <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-purple-400"></span>
-            <span className="capitalize font-medium">{activity.mood.energy} energy</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-blue-400 to-purple-400"></span>
+            <span className="capitalize font-medium">{activity.mood.energy}</span>
           </div>
         </div>
       </CardContent>
@@ -165,7 +165,7 @@ const DraggableActivityCard = memo(function DraggableActivityCard({
         <Button
           onClick={() => onAddToWeekend(activity.id)}
           disabled={isAdded}
-          className={`w-full transition-all duration-300 font-medium ${
+          className={`w-full transition-all duration-300 font-medium text-xs py-2 ${
             isAdded
               ? "bg-green-600 hover:bg-green-700 text-white shadow-md border-0"
               : "bg-blue-600 hover:bg-blue-700 text-white hover:shadow-lg hover:-translate-y-0.5 border-0"
@@ -173,13 +173,13 @@ const DraggableActivityCard = memo(function DraggableActivityCard({
         >
           {isAdded ? (
             <>
-              <span className="mr-2">✓</span>
-              Added to Weekend
+              <span className="mr-1">✓</span>
+              Added
             </>
           ) : (
             <>
-              <Plus className="w-4 h-4 mr-2" />
-              Add to Weekend
+              <Plus className="w-3 h-3 mr-1" />
+              Add
             </>
           )}
         </Button>
