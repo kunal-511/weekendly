@@ -105,9 +105,8 @@ Create a `.env` file in the project root:
 ```env
 # Google Maps API
 NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+NEXT_PUBLIC_GOOGLE_MAPS_SIGNING_SECRET=your_google_maps_signing_secret
 
-# OpenWeatherMap API
-OPENWEATHER_API_KEY=your_openweather_api_key
 ```
 
 ## API Integrations
