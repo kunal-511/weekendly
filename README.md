@@ -42,7 +42,7 @@ A comprehensive weekend planning application that helps users discover, plan, an
 
 ## Demo
 
-Visit the live application at: []()
+Visit the live application at: [Weekendly](https://weekendly-ecru.vercel.app/)
 
 ## Installation
 
