@@ -1,15 +1,12 @@
-"use client"
-
 import type React from "react"
-import { DragDropProvider } from "@/contexts/drag-drop-context"
-import { ThemeProvider } from "@/contexts/theme-context"
 import { Suspense } from "react"
+import { Providers } from "@/contexts/providers"
 import "./globals.css"
 import { Metadata } from "next"
 
-export const metdata: Metadata = {
+export const metadata: Metadata = {
   title: "Weekendly - Design Your Perfect Weekend",
-  description: "Design Your Perfect Weekend getaway with Weekendly. Discover activities, create plans and smart discoveries.", 
+  description: "Design Your Perfect Weekend getaway with Weekendly. Discover activities, create plans and smart discoveries.",
 }
 
 export default function RootLayout({
@@ -21,11 +18,9 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Suspense fallback={null}>
-          <ThemeProvider>
-            <DragDropProvider onDropActivity={() => { }}>
-              {children}
-            </DragDropProvider>
-          </ThemeProvider>
+          <Providers>
+            {children}
+          </Providers>
         </Suspense>
       </body>
     </html>

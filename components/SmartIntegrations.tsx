@@ -178,9 +178,10 @@ export function SmartIntegrations() {
       return new Promise((resolve) => {
         geocoder.geocode(
           { address: cityName },
-          (results: any[] | null, status: any) => {
+          (results: unknown[] | null, status: string) => {
             if (status === 'OK' && results && results[0]) {
-              const location = results[0].geometry.location
+              const result = results[0] as { geometry: { location: { lat(): number; lng(): number } } }
+              const location = result.geometry.location
               resolve({
                 lat: location.lat(),
                 lng: location.lng()
