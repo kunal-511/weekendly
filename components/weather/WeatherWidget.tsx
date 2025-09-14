@@ -138,7 +138,7 @@ const WeatherWidget = memo(function WeatherWidget({ onWeatherUpdate }: WeatherWi
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               placeholder="Enter city name..."
-              className="w-full px-4 py-3 bg-white/70 backdrop-blur border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-sm"
+              className="w-full px-4 py-2 bg-white/70 backdrop-blur border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-sm"
             />
           </div>
           <Button
@@ -146,18 +146,18 @@ const WeatherWidget = memo(function WeatherWidget({ onWeatherUpdate }: WeatherWi
             variant="outline"
             onClick={handleCurrentLocationClick}
             disabled={loading}
-            className="px-4 py-3 bg-white/70 backdrop-blur border-gray-200 hover:bg-blue-50 transition-all shadow-sm"
+            className="px-4 py-5 bg-white/70 backdrop-blur border-gray-200 hover:bg-blue-50 transition-all shadow-sm"
           >
-            <MapPin className="w-4 h-4" />
+            <MapPin className="w-6 h-6" />
           </Button>
           <Button
             type="button"
             variant="outline"
             onClick={handleRefreshClick}
             disabled={loading || !location.trim()}
-            className="px-4 py-3 bg-white/70 backdrop-blur border-gray-200 hover:bg-blue-50 transition-all shadow-sm"
+            className="px-4 py-5 bg-white/70 backdrop-blur border-gray-200 hover:bg-blue-50 transition-all shadow-sm"
           >
-            <RefreshCw className={`w-4 h-4 transition-transform ${loading ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-6 h-6 transition-transform ${loading ? 'animate-spin' : ''}`} />
           </Button>
         </form>
 
